@@ -270,15 +270,29 @@ var CheckDownload = function(ReqId, cb) {
 
 var InitialDownloadsCheck = function(){
     Downloads.find({}, function(err, docs){
-        docs.forEach(function(e, i){
-            if (e.ReqBody.Status !== 4) {
-                CheckDownload(e.ReqBody.Id, function(){
+        if (apiSettings.checkDownloadsOnRun) {
+        
+            docs.forEach(function(e, i){
+                if (e.ReqBody.Status !== 4) {
+                    CheckDownload(e.ReqBody.Id, function(){
+                        Downloads.remove({ _id: e._id }, {}, function(){
+                            console.log(e._id, 'deleted from DB');
+                        });
+                    });
+                }
+            });
+        
+        } else {
+            
+            docs.forEach(function(e, i){
+                if (e.ReqBody.Status !== 4) {
                     Downloads.remove({ _id: e._id }, {}, function(){
                         console.log(e._id, 'deleted from DB');
                     });
-                });
-            }
-        });
+                }
+            });
+
+        }
     });
 };
 
@@ -384,115 +398,125 @@ var InitialAutodownloadsCheck = function(){
         
         docs.forEach(function(doc, i){
             
-            if (doc.Status === 1) {
-        
-                var now = new Date(),
-                    today = now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
+            if (!apiSettings.startAutodownloadsOnRun) {
                 
-                doc.Settings.StartDate = today + 'T00:00:00Z';
-                doc.Settings.EndDate = today + 'T23:59:59Z';
+                Autodownloads.findOne({ _id: doc._id }, function(err, doc){
+                    Autodownloads.update({ _id: doc._id }, { $set: { Status: 0 } }, {});
+                });
                 
-                doc.Settings.DownloadFileName = doc.Settings.DownloadFileName + ' ' + now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate()) + ' ' + (now.getHours() < 10 ? '0' + (now.getHours()) : (now.getHours())) + '-' + (now.getMinutes() < 10 ? '0' + (now.getMinutes()) : (now.getMinutes())) + '-' + (now.getSeconds() < 10 ? '0' + (now.getSeconds()) : (now.getSeconds()));
-                doc.Settings.DownloadFileName = translit(doc.Settings.DownloadFileName);
-                
-                NFIELD.RequestDownload(doc.Settings, function(err, resp, body){
+            } else {
+            
+                if (doc.Status === 1) {
+            
+                    var now = new Date(),
+                        today = now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
                     
-                    if (resp && resp.statusCode == 202) {
-                        Downloads.insert({
-                            User: doc.User.toLowerCase(),
-                            Local: doc.Settings.local,
-                            ProjectName: doc.Settings.DownloadFileName,
-                            ReqBody: body,
-                            ClientReqStatus: 0 // 0 - not yet downloaded, 1 - already downloaded by the client
-                        }, function(err, newDoc){
-                            Users.findOne({ name: doc.User.toLowerCase() }, function(err, doc){
-                                if (SocketClients[doc.socketId]){
-                                    SocketClients[doc.socketId].emit('new download', { statusCode: 200, body: body });
-                                }
-                                CheckDownload(newDoc.ReqBody.Id);
-                            });
-                        });
+                    doc.Settings.StartDate = today + 'T00:00:00Z';
+                    doc.Settings.EndDate = today + 'T23:59:59Z';
+                    
+                    doc.Settings.DownloadFileName = doc.Settings.DownloadFileName + ' ' + now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate()) + ' ' + (now.getHours() < 10 ? '0' + (now.getHours()) : (now.getHours())) + '-' + (now.getMinutes() < 10 ? '0' + (now.getMinutes()) : (now.getMinutes())) + '-' + (now.getSeconds() < 10 ? '0' + (now.getSeconds()) : (now.getSeconds()));
+                    doc.Settings.DownloadFileName = translit(doc.Settings.DownloadFileName);
+                    
+                    NFIELD.RequestDownload(doc.Settings, function(err, resp, body){
                         
-                        AutodownloadIntervals[doc._id] = setInterval(function(){
-                            
-                            Autodownloads.findOne({ _id: doc._id }, function(err, doc){
-                                
-                                var now = new Date(),
-                                    today = now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
-            
-                                doc.Settings.StartDate = today + 'T00:00:00Z';
-                                doc.Settings.EndDate = today + 'T23:59:59Z';
-            
-                                doc.Settings.DownloadFileName = doc.Settings.DownloadFileName + ' ' + now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate()) + ' ' + (now.getHours() < 10 ? '0' + (now.getHours()) : (now.getHours())) + '-' + (now.getMinutes() < 10 ? '0' + (now.getMinutes()) : (now.getMinutes())) + '-' + (now.getSeconds() < 10 ? '0' + (now.getSeconds()) : (now.getSeconds()));
-                                doc.Settings.DownloadFileName = translit(doc.Settings.DownloadFileName);
-            
-                                NFIELD.RequestDownload(doc.Settings, function(err, resp, body){
-                                                    
-                                    if (resp && resp.statusCode == 202) {
-                                        Downloads.insert({
-                                            User: doc.User.toLowerCase(),
-                                            Local: doc.Settings.local,
-                                            ProjectName: doc.Settings.DownloadFileName,
-                                            ReqBody: body,
-                                            ClientReqStatus: 0 // 0 - not yet downloaded, 1 - already downloaded by the client
-                                        }, function(err, newDoc){
-                                            
-                                            Users.findOne({ name: doc.User.toLowerCase() }, function(err, doc){
-                                                if (SocketClients[doc.socketId]){
-                                                    SocketClients[doc.socketId].emit('new download', { statusCode: 200, body: body });
-                                                }
-                                                CheckDownload(newDoc.ReqBody.Id);
-                                            });
-                                            
-                                        });
-                                    } else if (resp) {
-                                        console.trace('Error %d:', resp.statusCode, body);
-                                    } else if (err) {
-                                        console.trace('Error:', err);
+                        if (resp && resp.statusCode == 202) {
+                            Downloads.insert({
+                                User: doc.User.toLowerCase(),
+                                Local: doc.Settings.local,
+                                ProjectName: doc.Settings.DownloadFileName,
+                                ReqBody: body,
+                                ClientReqStatus: 0 // 0 - not yet downloaded, 1 - already downloaded by the client
+                            }, function(err, newDoc){
+                                Users.findOne({ name: doc.User.toLowerCase() }, function(err, doc){
+                                    if (SocketClients[doc.socketId]){
+                                        SocketClients[doc.socketId].emit('new download', { statusCode: 200, body: body });
                                     }
+                                    CheckDownload(newDoc.ReqBody.Id);
+                                });
+                            });
+                            
+                            AutodownloadIntervals[doc._id] = setInterval(function(){
+                                
+                                Autodownloads.findOne({ _id: doc._id }, function(err, doc){
+                                    
+                                    var now = new Date(),
+                                        today = now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
+                
+                                    doc.Settings.StartDate = today + 'T00:00:00Z';
+                                    doc.Settings.EndDate = today + 'T23:59:59Z';
+                
+                                    doc.Settings.DownloadFileName = doc.Settings.DownloadFileName + ' ' + now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate()) + ' ' + (now.getHours() < 10 ? '0' + (now.getHours()) : (now.getHours())) + '-' + (now.getMinutes() < 10 ? '0' + (now.getMinutes()) : (now.getMinutes())) + '-' + (now.getSeconds() < 10 ? '0' + (now.getSeconds()) : (now.getSeconds()));
+                                    doc.Settings.DownloadFileName = translit(doc.Settings.DownloadFileName);
+                
+                                    NFIELD.RequestDownload(doc.Settings, function(err, resp, body){
+                                                        
+                                        if (resp && resp.statusCode == 202) {
+                                            Downloads.insert({
+                                                User: doc.User.toLowerCase(),
+                                                Local: doc.Settings.local,
+                                                ProjectName: doc.Settings.DownloadFileName,
+                                                ReqBody: body,
+                                                ClientReqStatus: 0 // 0 - not yet downloaded, 1 - already downloaded by the client
+                                            }, function(err, newDoc){
+                                                
+                                                Users.findOne({ name: doc.User.toLowerCase() }, function(err, doc){
+                                                    if (SocketClients[doc.socketId]){
+                                                        SocketClients[doc.socketId].emit('new download', { statusCode: 200, body: body });
+                                                    }
+                                                    CheckDownload(newDoc.ReqBody.Id);
+                                                });
+                                                
+                                            });
+                                        } else if (resp) {
+                                            console.trace('Error %d:', resp.statusCode, body);
+                                        } else if (err) {
+                                            console.trace('Error:', err);
+                                        }
+                                        
+                                    });
                                     
                                 });
-                                
-                            });
-                                            
-                        }, doc.Settings.autotime * 60 * 1000);
-                    } else if (resp) {
-                        
-                        console.trace('Error %d:', resp.statusCode, body);
-                        
-                        Autodownloads.findOne({ _id: doc._id }, function(err, doc){
-                            Autodownloads.update({ _id: doc._id }, { $set: { Status: 0 } }, {}, function(err){
-                                Autodownloads.findOne({ _id: doc._id }, function(err, doc){
-                                    var tempDoc = doc;
-                                    Users.findOne({ name: doc.User.toLowerCase() }, function(err, doc){
-                                        if (SocketClients[doc.socketId]){
-                                            SocketClients[doc.socketId].emit('update autodownload', { statusCode: 200, body: tempDoc });
-                                        }
+                                                
+                            }, doc.Settings.autotime * 60 * 1000);
+                        } else if (resp) {
+                            
+                            console.trace('Error %d:', resp.statusCode, body);
+                            
+                            Autodownloads.findOne({ _id: doc._id }, function(err, doc){
+                                Autodownloads.update({ _id: doc._id }, { $set: { Status: 0 } }, {}, function(err){
+                                    Autodownloads.findOne({ _id: doc._id }, function(err, doc){
+                                        var tempDoc = doc;
+                                        Users.findOne({ name: doc.User.toLowerCase() }, function(err, doc){
+                                            if (SocketClients[doc.socketId]){
+                                                SocketClients[doc.socketId].emit('update autodownload', { statusCode: 200, body: tempDoc });
+                                            }
+                                        });
                                     });
                                 });
                             });
-                        });
-                        
-                    } else if (err) {
-                        
-                        console.trace('Error:', err);
-                        
-                        Autodownloads.findOne({ _id: doc._id }, function(err, doc){
-                            Autodownloads.update({ _id: doc._id }, { $set: { Status: 0 } }, {}, function(err){
-                                Autodownloads.findOne({ _id: doc._id }, function(err, doc){
-                                    var tempDoc = doc;
-                                    Users.findOne({ name: doc.User.toLowerCase() }, function(err, doc){
-                                        if (SocketClients[doc.socketId]){
-                                            SocketClients[doc.socketId].emit('update autodownload', { statusCode: 200, body: tempDoc });
-                                        }
+                            
+                        } else if (err) {
+                            
+                            console.trace('Error:', err);
+                            
+                            Autodownloads.findOne({ _id: doc._id }, function(err, doc){
+                                Autodownloads.update({ _id: doc._id }, { $set: { Status: 0 } }, {}, function(err){
+                                    Autodownloads.findOne({ _id: doc._id }, function(err, doc){
+                                        var tempDoc = doc;
+                                        Users.findOne({ name: doc.User.toLowerCase() }, function(err, doc){
+                                            if (SocketClients[doc.socketId]){
+                                                SocketClients[doc.socketId].emit('update autodownload', { statusCode: 200, body: tempDoc });
+                                            }
+                                        });
                                     });
                                 });
                             });
-                        });
+                            
+                        }
                         
-                    }
-                    
-                });
+                    });
+                
+                }
             
             }
         
@@ -758,10 +782,9 @@ var SysIntervals = {
 SignInToApi(APIuser.user, APIuser.password, function(err, resp, body){
     APIuser.token = body.AuthenticationToken;
     
-    if (apiSettings.checkDownloadsOnRun) InitialDownloadsCheck();
+    InitialDownloadsCheck();
     
-    if (apiSettings.startAutodownloadsOnRun) InitialAutodownloadsCheck();
-    
+    InitialAutodownloadsCheck();
     
     if (apiSettings.generateInterviewersList) {
         
@@ -1162,53 +1185,3 @@ io.sockets.on('connection', function (socket) {
     });
     
 });
-
-/* ********************************************** */
-
-// NFIELD.SignIn(APIuser.user, APIuser.password, function(err, resp, body){
-//     console.log(resp.statusCode);
-//     if (resp.statusCode == 200){
-//         APIuser.token = body.AuthenticationToken;
-        
-//         /* **** TESTING NFIELDAPI REQs **** */
-        
-        // NFIELD.GetSurveyList(function(err, resp, body){
-        //     console.log(err);
-        //     console.log(resp.statusCode);
-        //     console.log(body);
-        // });
-        
-        // NFIELD.GetSurveyStatus('7b5c5ce8-b152-4dad-a7dd-82a70de896e9', function(err, resp, body){
-        //     console.log(err);
-        //     console.log(resp.statusCode);
-        //     var statuses = ['UnderConstruction', 'Started', '', 'Closed', 'Finished']
-        //     console.log(statuses[body]);
-        // });
-        
-//         // NFIELD.GetInterviewersList(function(err, resp, body){
-//         //     console.log(err);
-//         //     console.log(resp.statusCode);
-//         //     console.log(body);
-//         // });
-        
-//         // NFIELD.GetBackgroundTasks(function(err, resp, body){
-//         //     console.log(err);
-//         //     console.log(resp.statusCode);
-//         //     console.log(body);
-//         // });
-        
-//         // NFIELD.GetSpecificBackgroundTask('006754db-2e15-43f9-a6b5-a86d2956a04d', function(err, resp, body){
-//         //     console.log(err);
-//         //     console.log(resp.statusCode);
-//         //     console.log(body);
-//         // });
-        
-//         // NFIELD.RequestDownload('7b5c5ce8-b152-4dad-a7dd-82a70de896e9', false, true, false, true, false, false, true, false, 'super_duper_file_name', '2014-02-29T00:00:00Z', '2014-05-15T23:59:59Z', function(err, resp, body){
-//         //     console.log(err);
-//         //     console.log(resp.statusCode);
-//         //     console.log(body);
-//         // });
-        
-//         /* ******************************** */
-//     }
-// });
