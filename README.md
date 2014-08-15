@@ -47,7 +47,7 @@ This file contains server, domain and user credentials, needed for app to connec
 }
 ```
 
-leave ```token``` field emp
+leave ```token``` field empty
 
 settings.json
 --
