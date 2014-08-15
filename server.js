@@ -1,4 +1,4 @@
-var request = require('request'),//.defaults({'proxy':'http://proxyk1.field.tns:3128'}),
+var request = require('request'),
     express = require('express'),
     app = express(),
     nedb = require('nedb'),
