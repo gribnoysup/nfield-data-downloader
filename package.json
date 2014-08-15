@@ -1,0 +1,17 @@
+{
+  "name": "nfieldapi",
+  "author": "Sergey Petushkov",
+  "description": "custom nfieldapi web app",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "3.4.x",
+    "nedb": "0.9.x",
+    "crypto": "0.0.3",
+    "request": "2.33.x",
+    "socket.io": "~0.9.16"
+  },
+  "engines": {
+    "node": "0.10.22",
+    "npm": "1.2.25"
+  }
+}

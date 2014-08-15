@@ -1,0 +1,121 @@
+<div class="download-options" ng-show="selectedOption == 'Downloads'">
+                
+    <div class="options-header">
+        <span class="label">Download options</span>
+        <span ng-click="selectedOption = ''" class="close-button"></span>
+    </div>
+    
+    <form class="options-form pure-g" ng-submit="requestDownload(options)">
+                
+        <div class="pure-u-1-1 form-header">
+            <span>Interview:</span>
+        </div>
+                        
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.DownloadTestInterviewData}">
+                <input type="checkbox" ng-model="options.DownloadTestInterviewData">
+                <span>Test data</span>
+            </label>
+        </div>
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.DownloadSuccessfulLiveInterviewData}">
+                <input type="checkbox" ng-model="options.DownloadSuccessfulLiveInterviewData">
+                <span>Successful</span>
+            </label>
+        </div>
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.DownloadNotSuccessfulLiveInterviewData}">
+                <input type="checkbox" ng-model="options.DownloadNotSuccessfulLiveInterviewData">
+                <span>Dropped out</span>
+            </label>
+        </div>
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.DownloadSuspendedLiveInterviewData}">
+                <input type="checkbox" ng-model="options.DownloadSuspendedLiveInterviewData">
+            <span>Screen-out</span>
+            </label>
+        </div>
+                    
+        <div class="pure-u-1-1 form-header">
+            <span>Type of data:</span>
+        </div>
+                    
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.DownloadParaData}">
+                <input type="checkbox" ng-model="options.DownloadParaData">
+                <span>Paradata</span>
+            </label>
+        </div>
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.DownloadCapturedMedia}">
+                <input type="checkbox" ng-model="options.DownloadCapturedMedia">
+                <span>Media</span>
+            </label>
+        </div>
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.DownloadClosedAnswerData}">
+                <input type="checkbox" ng-model="options.DownloadClosedAnswerData">
+                <span>Closed</span>
+            </label>
+        </div>
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.DownloadOpenAnswerData}">
+                <input type="checkbox" ng-model="options.DownloadOpenAnswerData">
+                <span>Open answers</span>
+            </label>
+        </div>
+                    
+        <div class="pure-u-1-1 form-header">
+            <span>Time period:</span>
+        </div>
+        
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.allData}">
+                <input type="checkbox" ng-model="options.allData">
+                <span>Download all</span>
+            </label>
+        </div>
+        
+        <div class="pure-u-1-2 form-option">
+        </div>
+        
+        <div class="pure-u-1-2 form-label" ng-hide="options.allData">
+            <span>from:</span>
+        </div>
+        <div class="pure-u-1-2 form-date" ng-hide="options.allData">
+            <label><input type="date" ng-model="options.StartDate" class="pure-input"></label>
+        </div>
+        <div class="pure-u-1-2 form-label" ng-hide="options.allData">
+            <span>to:</span>
+        </div>
+        <div class="pure-u-1-2 form-date" ng-hide="options.allData">
+            <label><input type="date" ng-model="options.EndDate" class="pure-input"></label>
+        </div>
+        
+        <div class="pure-u-1-1 form-header">
+            <span>Download settings:</span>
+        </div>
+                    
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.auto}">
+                <input type="checkbox" ng-model="options.auto">
+                <span>Autodownload</span>
+            </label>
+        </div>
+        <div class="pure-u-1-2 form-input">
+            <input type="number" ng-model="options.autotime" ng-show="options.auto" class="pure-input">
+        </div>
+        <div class="pure-u-1-2 form-option">
+            <label ng-class="{selected: options.local}">
+                <input type="checkbox" ng-model="options.local">
+                <span>Save on server</span>
+            </label>
+        </div>
+                        
+        <div class="pure-u-1-1 submit">
+            <input type="submit" value="Request download" class="pure-button" ng-disabled="!(options.DownloadParaData || options.DownloadCapturedMedia || options.DownloadClosedAnswerData || options.DownloadOpenAnswerData) || !(options.DownloadTestInterviewData || options.DownloadSuccessfulLiveInterviewData || options.DownloadNotSuccessfulLiveInterviewData || options.DownloadSuspendedLiveInterviewData) || !options.SurveyId">
+        </div>
+        
+    </form>                        
+                    
+</div>
