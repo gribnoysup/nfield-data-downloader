@@ -42,10 +42,12 @@ This file contains server, domain and user credentials, needed for app to connec
   "domain" : "YRDMN",
   "user" : "apiuser",
   "password": "Y0urP45sW0rd",
-  "token": "", // leave empty
+  "token": "",
   "server" : "https://yourapi.server.com"
 }
 ```
+
+leave ```token``` field emp
 
 settings.json
 --
