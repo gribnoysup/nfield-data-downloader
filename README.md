@@ -17,7 +17,6 @@ This is a list of all frameworks and plugins, used to buld this app (front-end):
 
 Back-end modules are listed in the ```package.json```
 
----
 
 Configuring app
 --
@@ -68,7 +67,6 @@ Contains server workflow settings:
  - **generateInterviewersList** automatically generate a list of all interviewers, that are created on your domain in .dat and .sps formats
  - **localDownloadFolder** a folder to use, when a local download is requested
 
----
 
 Done!
 --
@@ -84,7 +82,6 @@ node server.js
 ```
 if you didn't install [supervisor], but I highly recommend to do so
 
----
 License
 --
 [MIT]
