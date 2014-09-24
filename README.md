@@ -3,6 +3,8 @@ Custom NField API web app
 
 Disclaimer
 --
+**The client side of this app was tested only in Chrome Version 36.0.1985.143 m**
+
 To use this app you'll need a configured [node.js] server, use instructions on the site or [this instruction] to do so
 
 To make any changes to it, you'll probably need some basic knowledge of javascript (front-end and back-end) and [Angular.js]
@@ -47,7 +49,7 @@ This file contains server, domain and user credentials, needed for app to connec
 }
 ```
 
-leave ```token``` field emp
+leave ```token``` field empty
 
 settings.json
 --
