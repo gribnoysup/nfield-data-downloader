@@ -742,7 +742,7 @@ var GenerateInterviewersList = function(cb){
                 });
                 
             } else {
-                console.log('Error %d:', res.statusCode, body);
+                console.trace('Error %d:', res.statusCode, body);
             }
         }
     });
@@ -1138,6 +1138,74 @@ app.post('/api/v1/autodownloads/:action/:id', function(req, res, next){
                     break;
             }
         }
+    } else {
+        res.send({ statusCode: 401, message: 'Access denied'});
+    }
+});
+
+app.post('/api/v1/:id/interviewers/getstatus/', function(req, res, next){
+    if (req.headers.authorization.split(' ')[1] == req.session.token){
+        
+        res.send({ statusCode: 200 });
+        
+        if (typeof req.body == 'string'){
+            req.body = JSON.parse(req.body);
+        }
+        
+        var arrayOfInterviewers = req.body,
+            surveyId = req.params.id;
+            
+        Users.findOne({ name: req.session.name.toLowerCase() }, function(err, doc){
+            
+            NFIELD.GetInterviewersList(function(err, responce, body){
+                if (err) {
+                    console.trace('Error:', err);
+                } else if (responce) {
+                    if (responce.statusCode == 200){
+                        if (typeof body == 'string'){
+                            body = JSON.parse(body);
+                        }
+                        
+                        for (var j = arrayOfInterviewers.length - 1; j >= 0; j--) {
+                            arrayOfInterviewers[j].IsChecked = true;
+                            for (var i = body.length - 1; i >= 0; i--) {
+                                if (body[i].UserName.toUpperCase() === arrayOfInterviewers[j].UserName.toUpperCase()) {
+                                    arrayOfInterviewers[j].InterviewerId = body[i].InterviewerId;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        NFIELD.GetInterviewersForSurvey(surveyId, function(err, responce, body){
+                            if (typeof body == 'string'){
+                                body = JSON.parse(body);
+                            }
+                            
+                            for (var j = arrayOfInterviewers.length - 1; j >= 0; j--) {
+                                for (var i = body.length - 1; i >= 0; i--) {
+                                    if (body[i].InterviewerId === arrayOfInterviewers[j].InterviewerId) {
+                                        arrayOfInterviewers[j].IsOnProject = true;
+                                        arrayOfInterviewers[j].IsAssigned = body[i].IsAssigned;
+                                        break;
+                                    } else if (body[i].InterviewerId !== arrayOfInterviewers[j].InterviewerId && i === 0) {
+                                        arrayOfInterviewers[j].IsOnProject = false;
+                                        arrayOfInterviewers[j].IsAssigned = false;
+                                    }
+                                }
+                                
+                                if (SocketClients[doc.socketId]){
+                                    SocketClients[doc.socketId].emit('update interviewer', arrayOfInterviewers[j]);
+                                }
+                            }
+                            
+                        });
+    
+                    }
+                }
+            });
+        
+        });
+        
     } else {
         res.send({ statusCode: 401, message: 'Access denied'});
     }
