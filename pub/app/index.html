@@ -8,10 +8,10 @@
         <link href="src/pure/pure-min.css" rel="stylesheet">
         <link href="src/font-awesome/css/font-awesome.min.css" rel="stylesheet">
         
-        <link href="src/css/main.prefixed.css" rel="stylesheet">
-        <link href="src/css/animation.prefixed.css" rel="stylesheet">
+        <!--<link href="src/css/main.prefixed.css" rel="stylesheet">-->
+        <!--<link href="src/css/animation.prefixed.css" rel="stylesheet">-->
         
-        <!--<link href="src/css/main.css" rel="stylesheet">-->
+        <link href="src/css/main.css" rel="stylesheet">
         <!--<link href="src/css/animation.css" rel="stylesheet">-->
         
     </head>
@@ -111,6 +111,9 @@
                 <!-- src/templates/download-options.html  -->
                 <download-options></download-options>
                 
+                <!-- src/templates/assign-interviewers.html  -->
+                <assign-interviewers></assign-interviewers>
+                
                 <div class="menu-fader" ng-show="selectedOption || options.SurveyId" ng-click="selectedOption = ''; options.SurveyId = ''"></div>
                 
             </div>
@@ -199,6 +202,9 @@
         <script src="/socket.io/socket.io.js"></script>
         <script src="src/jquery/jquery-1.10.1.min.js"></script>
         <script src="src/jquery/jQuery.fileDownload.js"></script>
+        
+        <script src="src/js-xls/xls.full.min.js"></script>
+        <script src="src/js-xls/xlsx.full.min.js"></script>
         
         <script src="src/angular/angular.min.js"></script>
         <script src="src/angular/angular-animate.js"></script>
