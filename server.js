@@ -177,9 +177,9 @@ var downloadLocally = function(dest, url, filename, cb){
         tempFilename = tempFilename[0] + '.tmp';
         
         if (e && e.code === 'EEXIST') {
-            // console.log("Folder '" + dest + "' already exist");
+            // console.log('Folder '' + dest + '' already exist');
         } else {
-            console.log("Folder '" + dest + "' created");
+            console.log('Folder "' + dest + '" created');
         }
         
         var file = fs.createWriteStream(path.join(process.env.PWD, dest, tempFilename));
@@ -215,7 +215,7 @@ var downloadLocally = function(dest, url, filename, cb){
                     
                     }
                     
-                    if (typeof (cb) == "function") cb();
+                    if (typeof (cb) == 'function') cb();
                 }
             );
         });
@@ -234,7 +234,7 @@ var CheckDownload = function(ReqId, cb) {
                         fileName = JSON.parse(doc.ReqBody.Parameters);
                     
                     if (tempDoc.Local === true && tempDoc.ReqBody.ResultUrl) {
-                        downloadLocally(apiSettings.localDownloadFolder, tempDoc.ReqBody.ResultUrl, (fileName.DownloadFileName + ".zip"));
+                        downloadLocally(apiSettings.localDownloadFolder, tempDoc.ReqBody.ResultUrl, (fileName.DownloadFileName + '.zip'));
                     }
                     
                     Users.findOne({ name : doc.User.toLowerCase() }, function(err, doc){
@@ -648,7 +648,7 @@ var NFIELD = {
             if (typeof (cb) == 'function') cb(error, response, body);
         });
     },
-    AddInterviewersToSurvey : function(surveyId, interviewerId, cb){
+    AddInterviewerToSurvey : function(surveyId, interviewerId, cb){
         request({
             url: nfieldapi + 'v1/Surveys/' + surveyId + '/Interviewers',
             method: 'POST',
@@ -659,6 +659,23 @@ var NFIELD = {
             },
             json: {
                 'InterviewerId': interviewerId
+            }
+        }, function (error, response, body) {
+            if (typeof (cb) == 'function') cb(error, response, body);
+        });
+    },
+    AssignInterviewerToSurvey : function(surveyId, interviewerId, cb){
+        request({
+            url: nfieldapi + 'v1/Surveys/' + surveyId + '/Assignment',
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + APIuser.token
+            },
+            json: {
+              'InterviewerId': interviewerId,
+              'Assign': true
             }
         }, function (error, response, body) {
             if (typeof (cb) == 'function') cb(error, response, body);
@@ -720,7 +737,7 @@ var GenerateInterviewersList = function(cb){
                     name = (e.FirstName + ' ' + e.LastName).replace('\t',' ');
                     
                     for (var j = e.UserName.length; j <= 100; j++){
-                        login = login + " ";
+                        login = login + ' ';
                     }
                     
                     text += e.ClientInterviewerId + login  + name + '\r\n';
@@ -754,7 +771,7 @@ function SignInToApi(user, password, callback){
     NFIELD.SignIn(user, password, function(err, resp, body){
         if (err) {
             
-            console.trace("Error:", err);
+            console.trace('Error:', err);
             
             setTimeout(function() {
                 SignInToApi(user, password, callback);
@@ -767,7 +784,7 @@ function SignInToApi(user, password, callback){
                 
             } else {
                 
-                console.trace("Error %d: ", resp.statusCode, body);
+                console.trace('Error %d: ', resp.statusCode, body);
                 
             }
         }
@@ -1143,7 +1160,7 @@ app.post('/api/v1/autodownloads/:action/:id', function(req, res, next){
     }
 });
 
-app.post('/api/v1/:id/interviewers/getstatus/', function(req, res, next){
+app.post('/api/v1/:id/interviewers/getstatus', function(req, res, next){
     if (req.headers.authorization.split(' ')[1] == req.session.token){
         
         res.send({ statusCode: 200 });
@@ -1206,6 +1223,26 @@ app.post('/api/v1/:id/interviewers/getstatus/', function(req, res, next){
         
         });
         
+    } else {
+        res.send({ statusCode: 401, message: 'Access denied'});
+    }
+});
+
+app.post('/api/v1/survey/add/:surveyId/:interviewerId', function(req, res, next) {
+    if (req.headers.authorization.split(' ')[1] == req.session.token){
+        NFIELD.AddInterviewerToSurvey(req.params.surveyId, req.params.interviewerId, function(err, responce, body){
+            res.send({ statusCode: responce.statusCode });
+        });
+    } else {
+        res.send({ statusCode: 401, message: 'Access denied'});
+    }
+});
+
+app.post('/api/v1/survey/assign/:surveyId/:interviewerId', function(req, res, next) {
+    if (req.headers.authorization.split(' ')[1] == req.session.token){
+        NFIELD.AssignInterviewerToSurvey(req.params.surveyId, req.params.interviewerId, function(err, responce, body){
+            res.send({ statusCode: responce.statusCode });
+        });
     } else {
         res.send({ statusCode: 401, message: 'Access denied'});
     }
