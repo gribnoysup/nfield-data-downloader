@@ -9,12 +9,12 @@
     
     <div class="interviewers-list-containter">
         <div class="interviewers-list-element pure-g" ng-repeat="interviewer in InterviewersToAssign" ng-mouseover="interviewer.MouseOver = true" ng-mouseout="interviewer.MouseOver = false" ng-class="{'hovered' : interviewer.MouseOver, 'not-exist' : !interviewer.InterviewerId && interviewer.IsChecked}">
-            <span class="pre-info-container icon pure-u-2-24" ng-show="(IsCheckStarted && !interviewer.IsChecked) || interviewer.MouseOver">
-                <i class="remove-from-list fa fa-times" ng-click="interviewer.removeFrom(InterviewersToAssign)" ng-show="(!IsCheckStarted || interviewer.IsChecked) && interviewer.MouseOver"></i>
-                <i class="loading fa fa-circle-o-notch fa-spin" ng-show="IsCheckStarted && !interviewer.IsChecked"></i>
+            <span class="pre-info-container icon pure-u-2-24" ng-show="(IsCheckStarted && !interviewer.IsChecked) || interviewer.MouseOver || interviewer.Checking">
+                <i class="remove-from-list fa fa-times" ng-click="interviewer.removeFrom(InterviewersToAssign)" ng-show="(!IsCheckStarted || interviewer.IsChecked) && interviewer.MouseOver && !interviewer.Checking"></i>
+                <i class="loading fa fa-circle-o-notch fa-spin" ng-show="(IsCheckStarted && !interviewer.IsChecked) || interviewer.Checking"></i>
             </span>
             
-            <span class="interviewer-user-name pure-u-13-24" ng-class="{ 'pure-u-13-24' : ((IsCheckStarted && !interviewer.IsChecked) || interviewer.MouseOver), 'pure-u-15-24' : !((IsCheckStarted && !interviewer.IsChecked) || interviewer.MouseOver) }">
+            <span class="interviewer-user-name pure-u-13-24" ng-class="{ 'pure-u-13-24' : ((IsCheckStarted && !interviewer.IsChecked) || interviewer.MouseOver || interviewer.Checking), 'pure-u-15-24' : !((IsCheckStarted && !interviewer.IsChecked) || interviewer.MouseOver || interviewer.Checking) }">
                 <span ng-bind="interviewer.UserName"></span>
             </span> 
             
@@ -23,14 +23,14 @@
             </span>
             
             <span class="added-status icon post pure-u-3-24" ng-class="{ 'added' : interviewer.IsOnProject }"><i class="fa fa-check"></i></span>
-            <span class="assigned-status icon post pure-u-3-24" ng-class="{ 'assigned' : interviewer.IsOnProject }"><i class="fa fa-pencil"></i></span>
+            <span class="assigned-status icon post pure-u-3-24" ng-class="{ 'assigned' : interviewer.IsAssigned }"><i class="fa fa-pencil"></i></span>
         </div>
     </div>
     
     <div class="buttons-container">
         <input type="button" class="check pure-button" value="Check interviewers list" ng-disabled="InterviewersToAssign.length === 0" ng-click="CheckInterviewersList(options.SurveyId, InterviewersToAssign)" ng-hide="IsCheckStarted">
-        <input type="button" class="add pure-button" value="Add to project" ng-show="IsCheckStarted">
-        <input type="button" class="assign pure-button" value="Assign to project" ng-show="IsCheckStarted">
+        <input type="button" class="add pure-button" value="Add to project" ng-show="IsCheckStarted" ng-click="AddAll(options.SurveyId, InterviewersToAssign)">
+        <input type="button" class="assign pure-button" value="Assign to project" ng-show="IsCheckStarted" ng-click="AssignAll(options.SurveyId, InterviewersToAssign)">
     </div>
 
 </div>
