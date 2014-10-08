@@ -34,10 +34,8 @@ appControllers.controller("UserCtrl", ["$scope", "Socket", "Global", "API", func
             });
             api.GetDownloadsList().success(function(data){
                 if (data.statusCode == 200){
-                    console.log($scope.glbl.Downloads);
                     data.body.forEach(function(e, i){
                         e.ReqBody.Parameters = JSON.parse(e.ReqBody.Parameters);
-                        console.log(e.ReqBody);
                         $scope.glbl.Downloads.push(e.ReqBody);
                     });
                 } else {
@@ -78,7 +76,6 @@ appControllers.controller("UserCtrl", ["$scope", "Socket", "Global", "API", func
                     if (data.statusCode == 200){
                         data.body.forEach(function(e, i){
                             e.ReqBody.Parameters = JSON.parse(e.ReqBody.Parameters);
-                            console.log(e.ReqBody);
                             $scope.glbl.Downloads.push(e.ReqBody);
                         });
                         $scope.glbl.Downloads;
@@ -89,7 +86,6 @@ appControllers.controller("UserCtrl", ["$scope", "Socket", "Global", "API", func
                 api.GetAutodownloadsList().success(function(data){
                     if (data.statusCode == 200){
                         data.body.forEach(function(e, i){
-                            console.log(e);
                             $scope.glbl.Autodownloads[e._id] = e;
                         });
                     } else {
@@ -132,7 +128,8 @@ appControllers.controller("SurveyListCtrl", ["$scope", "Socket", "Global", "API"
     });
     
     var api = API,
-        today = new Date();
+        today = new Date(),
+        sckt = Socket;
     
     $scope.glbl = Global;
     
@@ -207,6 +204,135 @@ appControllers.controller("SurveyListCtrl", ["$scope", "Socket", "Global", "API"
             }
         });
     };
+    
+    $scope.InterviewersToAssign = [];
+    
+    $scope.IsCheckStarted = false;
+    
+    function Interviewer(UserName){
+        this.UserName = UserName;
+        this.InterviewerId = '';
+        this.IsOnProject = undefined;
+        this.IsAssigned = undefined;
+        this.IsChecked = false;
+        this.Checking = false;
+    }
+    
+    Interviewer.prototype = {
+        'removeFrom': function(array) {
+            array.splice(array.indexOf(this), 1);
+        },
+        'addToProject' : function(surveyId) {
+            var __this = this;
+            
+            if (__this.IsOnProject !== true && __this.InterviewerId !== '') {
+                __this.Checking = true;
+                api.AddInterviewerToSurvey(surveyId, __this.InterviewerId).success(function(data){
+                    if (data.statusCode === 200) {
+                        __this.IsOnProject = true;
+                    }
+                    __this.Checking = false;
+                });
+            }
+        },
+        'assignToProject' : function(surveyId) {
+            var __this = this;
+            
+            if (__this.IsOnProject === true && __this.IsAssigned !== true && __this.InterviewerId !== '') {
+                __this.Checking = true;
+                api.AssignInterviewerToSurvey(surveyId, __this.InterviewerId).success(function(data){
+                    if (data.statusCode === 200) {
+                        __this.IsAssigned = true;
+                    }
+                    __this.Checking = false;
+                });
+            }
+        }
+    };
+    
+    $scope.CheckInterviewersList = function(surveyId, array){
+        if (array.length !== 0 && $scope.IsCheckStarted === false) {
+            $scope.IsCheckStarted = true;
+            api.CheckInterviewersList(surveyId, array).success(function(data){
+                //TODO: ERROR HANDLING
+                console.log(data);
+            });
+        }
+    };
+    
+    $scope.AddAll = function(surveyId, array) {
+        if (array.length !== 0) {
+            for (var i = 0, len = array.length; i < len; i++){
+                array[i].addToProject(surveyId);
+            }
+        }
+    };
+    
+    $scope.AssignAll = function(surveyId, array) {
+        if (array.length !== 0) {
+            for (var i = 0, len = array.length; i < len; i++){
+                array[i].assignToProject(surveyId);
+            }
+        }
+    };
+    
+    sckt.on('update interviewer', function(data){
+        
+        for (var i = $scope.InterviewersToAssign.length - 1; i >= 0; i--){
+            if (data.UserName == $scope.InterviewersToAssign[i].UserName) {
+                $scope.InterviewersToAssign[i].InterviewerId = data.InterviewerId;
+                $scope.InterviewersToAssign[i].IsChecked = data.IsChecked;
+                $scope.InterviewersToAssign[i].IsOnProject = data.IsOnProject;
+                $scope.InterviewersToAssign[i].IsAssigned = data.IsAssigned;
+                break;
+            }
+        }
+        
+    });
+    
+    $scope.$watch('interviewersData', function(newVal, oldVal){
+        var tempArray = [],
+            i = 0;
+        
+        $scope.IsCheckStarted = false;
+        
+        if (typeof(newVal) == 'string'){
+            tempArray = newVal.split("\n").map(function(elem){
+                if (elem.trim().length > 0) {
+                    return new Interviewer(elem.trim());
+                } else {
+                    return undefined;
+                }
+            });
+            
+            i = tempArray.indexOf(undefined);
+            
+            while (i !== -1) {
+                tempArray.splice(i, 1);
+                i = tempArray.indexOf(undefined);
+            }
+        } else if (typeof(newVal) == 'object' && newVal.Sheets) {
+            var tempSheet = newVal.Sheets[newVal.SheetNames[0]];
+
+            for (var key in tempSheet) {
+                if (key.substr(0, 1) !== '!' && tempSheet[key]['v'] && tempSheet[key]['v'].trim().length > 0){ 
+                    tempArray.push(new Interviewer(tempSheet[key]['v'].trim()));
+                }
+            }
+        }
+        
+        for (i = tempArray.length - 1; i >= 0; i--) {
+            for (var j = i - 1; j >= 0; j--) {
+                if (tempArray[i].UserName.toUpperCase() == tempArray[j].UserName.toUpperCase()) {
+                    tempArray.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        
+        $scope.InterviewersToAssign = tempArray;
+        
+    });
     
 }]);
 
