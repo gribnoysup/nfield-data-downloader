@@ -137,6 +137,34 @@ appFactories.factory("API", ["$http", "Global", function($http, Global){
                     'Authorization': 'Basic ' + Global.Token
                 }
             });
+        },
+        CheckInterviewersList: function(surveyId, list){
+            return $http({
+                method:"POST",
+                url:"/api/v1/" + surveyId + "/interviewers/getstatus",
+                data: list,
+                headers: {
+                    'Authorization': 'Basic ' + Global.Token
+                }
+            });
+        },
+        AddInterviewerToSurvey: function(surveyId, interviewerId){
+            return $http({
+                method:"POST",
+                url:"/api/v1/survey/add/" + surveyId + "/" + interviewerId,
+                headers: {
+                    'Authorization': 'Basic ' + Global.Token
+                }
+            });
+        },
+        AssignInterviewerToSurvey: function(surveyId, interviewerId){
+            return $http({
+                method:"POST",
+                url:"/api/v1/survey/assign/" + surveyId + "/" + interviewerId,
+                headers: {
+                    'Authorization': 'Basic ' + Global.Token
+                }
+            });
         }
     };
 }]);
