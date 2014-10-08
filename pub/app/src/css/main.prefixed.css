@@ -384,8 +384,6 @@ width:80%;
 color:hsla(210, 30%, 30%, 1);
 background-color:hsla(210, 30%, 55%, 1);
 }
-/* EXPERIMENTING WITH STYLES */
-
 .interviewers-list-containter{
 overflow-y:auto;
 /* margin:*/
@@ -485,8 +483,6 @@ min-height:70px;
 color:hsla(210, 30%, 30%, 1);
 background-color:hsla(210, 30%, 55%, 1);
 }
-/* ************************* */
-
 .all-content > .survey-menu-content > .menu-fader{
 width:30000px;
 background-color:hsla(0, 0%, 0%, 0.5);

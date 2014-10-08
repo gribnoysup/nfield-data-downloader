@@ -423,8 +423,6 @@ input[type=number] {
     background-color: hsla(210, 30%, 55%, 1);
 }
 
-/* EXPERIMENTING WITH STYLES */
-
 .interviewers-list-containter {
     overflow-y: auto;
     /* margin: 10px 0; */
@@ -531,8 +529,6 @@ input[type=number] {
   color: hsla(210, 30%, 30%, 1);
   background-color: hsla(210, 30%, 55%, 1);
 }
-
-/* ************************* */
 
 .all-content > .survey-menu-content > .menu-fader {
     width: 30000px;
