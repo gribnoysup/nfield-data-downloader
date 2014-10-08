@@ -292,25 +292,26 @@ input[type=number] {
     z-index: 777;
 }
 
-.all-content > .survey-menu-content > .download-options > .options-header {
+.all-content > .survey-menu-content .options-header {
     width: 100%;
     display: inline-flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 40px;
     height: 40px;
     overflow: hidden;
     
     border-bottom: 3px solid hsla(210, 30%, 65%, 1);
 }
 
-.all-content > .survey-menu-content > .download-options > .options-header > span.label {
+.all-content > .survey-menu-content .options-header > span.label {
     font-weight: lighter;
     letter-spacing: 0.05em;
     color: hsla(210, 30%, 50%, 1);
     padding-left: 10px;
 }
 
-.all-content > .survey-menu-content > .download-options > .options-header > span.close-button {
+.all-content > .survey-menu-content .options-header > span.close-button {
     width: 60px;
     height: 60px;
     
@@ -321,11 +322,11 @@ input[type=number] {
     margin-right: -20px;
 }
 
-.all-content > .survey-menu-content > .download-options > .options-header > span.close-button:hover {
+.all-content > .survey-menu-content .options-header > span.close-button:hover {
     background-color: hsla(210, 30%, 65%, 1);
 }
 
-.all-content > .survey-menu-content > .download-options > .options-header > span.close-button:active {
+.all-content > .survey-menu-content .options-header > span.close-button:active {
     background-color: hsla(210, 30%, 55%, 1);
     box-shadow: inset 0px 0px 7px 1px hsla(210, 30%, 35%, 1);
 }
@@ -422,6 +423,117 @@ input[type=number] {
     background-color: hsla(210, 30%, 55%, 1);
 }
 
+/* EXPERIMENTING WITH STYLES */
+
+.interviewers-list-containter {
+    overflow-y: auto;
+    /* margin: 10px 0; */
+    flex: 1 auto;
+}
+.assign-interviewers-options {
+    width: 400px;
+    background-color: hsla(210, 30%, 80%, 1);
+    
+    display:flex;
+    flex-direction: column;
+    
+    z-index: 777;
+}
+
+.drop-place {
+    margin: 10px;
+    padding: 15px 10px;
+    text-align: center;
+    border: 2px solid;
+    border-radius: 6px;
+    font-weight: bold;
+    color: hsla(210, 30%, 55%, 0.5);
+    /* min-width: 60px; */
+    min-height: 2em;
+    line-height: 2em;
+    /* display: inline; */
+}
+
+.drop-place.dragged-over {
+    color: hsla(210, 30%, 55%, 1);
+}
+
+.interviewers-list-element {
+    display: inline-flex;
+    width: 100%;
+    padding: 5px 0;
+    align-items: center;
+}
+
+.interviewers-list-element.not-exist {
+    background-color: hsla(9, 100%, 64%, .1);
+}
+
+.interviewers-list-element.not-exist.hovered {
+    background-color: hsla(9, 100%, 64%, .3);
+}
+
+.interviewers-list-element.not-exist * {
+    border-color: hsla(9, 100%, 64%, 1) !important;
+    color: hsla(9, 100%, 64%, 1) !important;
+}
+
+.interviewers-list-element.hovered {
+    background-color: hsla(210, 30%, 70%, 1);
+}
+
+.fa-exclamation {
+    color: tomato !important;
+    border-color: tomato !important;
+}
+
+.interviewers-list-element span.icon {
+    text-align:center;
+}
+
+.interviewers-list-element span.icon i {
+    color: hsla(210, 30%, 50%, 1);
+    width: 16px;
+    height: 16px;
+}
+
+.interviewers-list-element span.icon.post {
+    opacity: 0.3;
+}
+
+.interviewer-user-name {
+    color: hsla(210, 30%, 30%, 1);
+}
+
+.interviewer-user-name.pure-u-15-24 > span {
+    margin-left: 10px;
+}
+
+.checked, .added, .assigned {
+    opacity: 1 !important;
+}
+
+.interviewers-list-element span.icon.post i {
+    padding: 3px;
+    border: 2px solid hsla(210, 30%, 50%, 1);
+    border-radius: 100%;
+    line-height: 17px;
+}
+
+.buttons-container {
+    display: inline-flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 70px;
+}
+
+.buttons-container > * {
+  color: hsla(210, 30%, 30%, 1);
+  background-color: hsla(210, 30%, 55%, 1);
+}
+
+/* ************************* */
+
 .all-content > .survey-menu-content > .menu-fader {
     width: 30000px;
     background-color: hsla(0, 0%, 0%, 0.5);
@@ -501,10 +613,6 @@ input[type=number] {
     padding-left: 10px;
 }
 
-.downloads-list > .autodownloads > .autodownload-element {
-    
-}
-
 .downloads-list > .autodownloads > .autodownload-element > .autodownload-info {
     display: inline-flex;
     align-items: center;
@@ -530,51 +638,51 @@ input[type=number] {
 /* ****** TOGGLE BUTTON MAGIC ******* */
 
 .cmn-toggle {
-  position: absolute;
-  margin-left: -9999px;
-  visibility: hidden;
+    position: absolute;
+    margin-left: -9999px;
+    visibility: hidden;
 }
 .cmn-toggle + label {
-  display: block;
-  position: relative;
-  cursor: pointer;
-  outline: none;
-  user-select: none;
+    display: block;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
 }
 
 input.cmn-toggle-round + label {
-  padding: 2px;
-  width: 30px;
-  height: 15px;
-  background-color: #dddddd;
-  border-radius: 15px;
+    padding: 2px;
+    width: 30px;
+    height: 15px;
+    background-color: #dddddd;
+    border-radius: 15px;
 }
 input.cmn-toggle-round + label:before,
 input.cmn-toggle-round + label:after {
-  display: block;
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  bottom: 1px;
-  content: "";
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    bottom: 1px;
+    content: "";
 }
 input.cmn-toggle-round + label:before {
-  right: 1px;
-  background-color: #f1f1f1;
-  border-radius: 15px;
+    right: 1px;
+    background-color: #f1f1f1;
+    border-radius: 15px;
 }
 input.cmn-toggle-round + label:after {
-  width: 17px;
-  background-color: #fff;
-  border-radius: 100%;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  transition: margin 0.15s;
+    width: 17px;
+    background-color: #fff;
+    border-radius: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: margin 0.15s;
 }
 input.cmn-toggle-round:checked + label:before {
-  background-color: hsla(206, 100%, 60%, 1);
+    background-color: hsla(206, 100%, 60%, 1);
 }
 input.cmn-toggle-round:checked + label:after {
-  margin-left: 15px;
+    margin-left: 15px;
 }
 
 /* ********************************** */
