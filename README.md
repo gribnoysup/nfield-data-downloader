@@ -16,9 +16,14 @@ This is a list of all frameworks and plugins, used to buld this app (front-end):
  - [jQuery]
  - [jquery.fileDownload]
  - [Font Awesome]
+ - SheetJS [JS-XLS] and [JS-XLSX]
 
 Back-end modules are listed in the ```package.json```
 
+Quick overview
+--
+
+This web app allows you to create an autodownload processes for the specific survey and quickly assign a group of interviewers to the specific survey in Nfield data collection system .
 
 Configuring app
 --
@@ -103,6 +108,8 @@ License
 [Pure.css]:http://purecss.io/
 [jQuery]:http://jquery.com/
 [Font Awesome]:http://fortawesome.github.io/Font-Awesome/
+[JS-XLS]:https://github.com/SheetJS/js-xls
+[JS-XLSX]:https://github.com/SheetJS/js-xlsx
 [jquery.fileDownload]:https://github.com/johnculviner/jquery.fileDownload
 [supervisor]:https://github.com/isaacs/node-supervisor
 [MIT]:https://github.com/gribnoysup/nfield-data-downloader/blob/master/LICENSE
