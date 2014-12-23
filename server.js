@@ -984,7 +984,7 @@ app.post('/api/v1/downloadrequest/:id', function(req, res, next){
                                             today = now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate());
                                             
                                         doc.Settings.StartDate = today + 'T00:00:00Z';
-                                        doc.Settings.EndDate = today + 'T23:59:59Z'; // THE MOST FUCKING HUMILIATING ERROR IN MY LIFE
+                                        doc.Settings.EndDate = today + 'T23:59:59Z';
                                         
                                         doc.Settings.DownloadFileName = doc.Settings.DownloadFileName + ' ' + now.getFullYear() + '-' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '-' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate()) + ' ' + (now.getHours() < 10 ? '0' + (now.getHours()) : (now.getHours())) + '-' + (now.getMinutes() < 10 ? '0' + (now.getMinutes()) : (now.getMinutes())) + '-' + (now.getSeconds() < 10 ? '0' + (now.getSeconds()) : (now.getSeconds()));
                                         doc.Settings.DownloadFileName = translit(doc.Settings.DownloadFileName);
