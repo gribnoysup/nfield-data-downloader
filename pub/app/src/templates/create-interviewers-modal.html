@@ -1,0 +1,78 @@
+<div class="create-interviewers">
+    <div class="menu">
+        <div class="options-header pure-menu pure-menu-open pure-menu-horizontal">
+            <span class="label pure-menu-heading">Create interviewers</span>
+            <ul class="pure-menu-heading">
+                <li ng-show="ArrayOfIntersToCreate"><a href="#" ng-click="refresh()" class="refresh-button"><i class="fa fa-refresh"></i></a></li>
+                <li><a href="#" ng-click="closeModal()" class="close-button">✕</a></li>
+            </ul>
+        </div>
+        
+        <div class="pure-g table-header">
+            <div class="pure-u-1-6">
+                <span>Username</span>
+            </div>
+            <div class="pure-u-1-6">
+                <span>First Name</span>
+            </div>
+            <div class="pure-u-1-6">
+                <span>Last Name</span>
+            </div>
+            <div class="pure-u-1-6">
+                <span>Email</span>
+            </div>
+            <div class="pure-u-1-6">
+                <span>Telephone</span>
+            </div>
+            <div class="pure-u-1-6">
+                <span>Password</span>
+            </div>
+        </div>
+        
+        <div ng-hide="ArrayOfIntersToCreate" class="drop-place-creating" drop-target>
+            <span ng-show="dropped"><i class="fa fa-cog fa-spin"></i></span>
+            <span ng-hide="dropped">Drop file here</span>
+        </div>
+        
+        <div ng-show="ArrayOfIntersToCreate" class="interviewers-list-containter">
+            <div class="pure-g" ng-repeat="inter in ArrayOfIntersToCreate" ng-class="[inter._status, (!inter.Username || !inter.Password) ? 'invalid' : '']">
+                <div ng-show="inter._errorMessage" class="error-message pure-u-1">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <span ng-bind="inter._errorMessage"></span>
+                </div>
+                <div class="pure-u-1-6">
+                    <span ng-bind="inter.Username" ng-dblclick="editUsername = !editUsername" ng-hide="editUsername"></span>
+                    <input type="text" ng-model="inter.Username" ng-show="editUsername" ng-blur="editUsername = !editUsername" focus-on="editUsername"/>
+                </div>
+                <div class="pure-u-1-6">
+                    <span ng-bind="inter.FirstName" ng-dblclick="editFirstName = !editFirstName" ng-hide="editFirstName"></span>
+                    <input type="text" ng-model="inter.FirstName" ng-show="editFirstName" ng-blur="editFirstName = !editFirstName" focus-on="editFirstName"/>
+                </div>
+                <div class="pure-u-1-6">
+                    <span ng-bind="inter.LastName" ng-dblclick="editLastName = !editLastName" ng-hide="editLastName"></span>
+                    <input type="text" ng-model="inter.LastName" ng-show="editLastName" ng-blur="editLastName = !editLastName" focus-on="editLastName"/>
+                </div>
+                <div class="pure-u-1-6">
+                    <span ng-bind="inter.EmailAddress" ng-dblclick="editEmailAddress = !editEmailAddress" ng-hide="editEmailAddress"></span>
+                    <input type="text" ng-model="inter.EmailAddress" ng-show="editEmailAddress" ng-blur="editEmailAddress = !editEmailAddress" focus-on="editEmailAddress"/>
+                </div>
+                <div class="pure-u-1-6">
+                    <span ng-bind="inter.TelephoneNumber" ng-dblclick="editTelephoneNumber = !editTelephoneNumber" ng-hide="editTelephoneNumber"></span>
+                    <input type="text" ng-model="inter.TelephoneNumber" ng-show="editTelephoneNumber" ng-blur="editTelephoneNumber = !editTelephoneNumber" focus-on="editTelephoneNumber"/>
+                </div>
+                <div class="pure-u-1-6">
+                    <span ng-bind="inter.Password" ng-dblclick="editPassword = !editPassword" ng-hide="editPassword"></span>
+                    <input type="text" ng-model="inter.Password" ng-show="editPassword" ng-blur="editPassword = !editPassword" focus-on="editPassword"/>
+                </div>
+            </div>
+        </div>
+        
+        <div class="create-controls">
+            <button ng-click="createInterviewers(ArrayOfIntersToCreate)" class="pure-button" ng-disabled="ArrayOfIntersToCreate.length < 1">
+                <span ng-show="creating"><i class="fa fa-cog fa-spin"></i></span>
+                <span ng-hide="creating">Create interviewers</span>
+            </button>
+        </div>
+        
+    <div>
+</div>
