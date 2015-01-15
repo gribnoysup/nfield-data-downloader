@@ -23,7 +23,7 @@ Back-end modules are listed in the ```package.json```
 Quick overview
 --
 
-This web app allows you to create an autodownload processes for the specific survey and quickly assign a group of interviewers to the specific survey in Nfield data collection system .
+This web app allows you to create an autodownload processes for the specific survey, quckly create and assign a group of interviewers to the specific survey in Nfield data collection system.
 
 Configuring app
 --
