@@ -247,7 +247,6 @@ input[type=number] {
     height: 60px;
     
     background-color: hsla(210, 30%, 65%, 1);
-    /*border: 4px solid hsla(210, 30%, 55%, 1);*/
     
     -webkit-transform: rotate(45deg) skew(20deg, 20deg);
     -webkit-backface-visibility: hidden;
@@ -425,8 +424,7 @@ input[type=number] {
 
 .interviewers-list-containter {
     overflow-y: auto;
-    /* margin: 10px 0; */
-    flex: 1 auto;
+    flex: 1;
 }
 .assign-interviewers-options {
     width: 400px;
@@ -446,10 +444,8 @@ input[type=number] {
     border-radius: 6px;
     font-weight: bold;
     color: hsla(210, 30%, 55%, 0.5);
-    /* min-width: 60px; */
     min-height: 2em;
     line-height: 2em;
-    /* display: inline; */
 }
 
 .drop-place.dragged-over {
@@ -682,3 +678,141 @@ input.cmn-toggle-round:checked + label:after {
 }
 
 /* ********************************** */
+
+div.create-interviewers {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left: 0;
+    background-color: hsla(0, 0%, 0%, 0.6);
+    width: 100%;
+}
+
+div.create-interviewers > div.menu {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: 0 auto;
+    min-width: 1000px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0px 17px 50px rgba(0, 0, 0, 0.2);
+}
+
+div.create-interviewers > div.menu > div.options-header {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid lightblue;
+}
+
+div.create-interviewers > div.menu > .options-header > ul {
+    margin: 5px 10px;
+}
+
+.table-header {
+    min-height: 40px;
+    line-height: 40px;
+    background-color: hsla(210, 30%, 65%, 1);
+    color: hsla(210, 30%, 30%, 1);
+    text-transform: uppercase;
+    font-size: 90%;
+}
+
+.table-header div > span {
+    padding-left: 10px;
+}
+
+.drop-place-creating {
+    flex: 1;
+    background-color: hsla(210, 30%, 95%, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 100;
+    color: hsla(210, 30%, 75%, 1);
+    text-shadow: 0px 1px 1px hsla(210, 30%, 55%, 1);
+}
+.drop-place-creating.dragged-over {
+    background-color: hsla(210, 30%, 85%, 1);
+    color: hsla(210, 30%, 65%, 1);
+    text-shadow: 0px 1px 1px hsla(210, 30%, 45%, 1);
+}
+.menu > div.interviewers-list-containter > div:hover {
+    background-color: hsla(210, 30%, 85%, 1);
+}
+.menu > div.interviewers-list-containter > div:hover > div:hover {
+    background-color: hsla(210, 30%, 80%, 1);
+}
+
+.menu > .interviewers-list-containter > div:nth-child(even) {
+    background-color: hsla(210, 30%, 95%, 1);
+}
+
+.menu > .interviewers-list-containter > div.invalid {
+    background-color: hsla(9, 100%, 90%, 1);
+    color: hsla(9, 100%, 50%, 1);
+}
+.menu > .interviewers-list-containter > div.invalid:hover {
+    background-color: hsla(9, 100%, 85%, 1);
+}
+.menu > div.interviewers-list-containter > div.invalid:hover > div:hover {
+    background-color: hsla(9, 100%, 80%, 1);
+}
+
+.menu > .interviewers-list-containter > div > div > span,
+.menu > .interviewers-list-containter > div > div > input {
+    display: inline-block;
+    min-height: 25px;
+    width: 100%;
+    padding-left: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.create-controls {
+    display: flex;
+    justify-content: flex-end;
+    background-color: hsla(210, 30%, 75%, 1);
+}
+.create-controls button {
+    margin: 5px;
+    color: hsla(210, 30%, 90%, 1);
+    background-color: hsla(210, 30%, 60%, 1);
+}
+.create-controls button:hover {
+    background-color: hsla(210, 30%, 50%, 1);
+}
+.menu > .interviewers-list-containter > div.exists {
+    background-color: hsla(37, 90%, 61%, 1);
+    color: #fff;
+}
+.menu > .interviewers-list-containter > div.exists:hover,
+.menu > .interviewers-list-containter > div.exists:hover > div:hover {
+    background-color: hsla(37, 90%, 51%, 1);
+}
+
+.menu > .interviewers-list-containter .error-message {
+    display: inline-flex;
+}
+.menu > .interviewers-list-containter .error-message > * {
+    padding-left: 10px;
+    min-height: 25px;
+    line-height: 25px;
+}
+.menu > .interviewers-list-containter > div > div {
+    height: 25px;
+    line-height: 25px;
+}
+.menu > .interviewers-list-containter > div.created {
+    color: #fff;
+    background-color: hsla(145, 63%, 49%, 1);
+}
+.menu > .interviewers-list-containter > div.created:hover,
+.menu > .interviewers-list-containter > div.created:hover > div:hover {
+    background-color: hsla(145, 63%, 42%, 1);
+}
