@@ -165,6 +165,16 @@ appFactories.factory("API", ["$http", "Global", function($http, Global){
                     'Authorization': 'Basic ' + Global.Token
                 }
             });
+        },
+        CreateInterviewer: function(interviewer){
+            return $http({
+                method:"POST",
+                url:"/api/v1/interviewer/create",
+                headers: {
+                    'Authorization': 'Basic ' + Global.Token
+                },
+                data: interviewer
+            });
         }
     };
 }]);
