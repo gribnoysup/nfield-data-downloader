@@ -1,12 +1,13 @@
 var appControllers = angular.module('app-controllers', []);
 
-appControllers.controller("UserCtrl", ["$scope", "Socket", "Global", "API", function($scope, Socket, Global, API){
+appControllers.controller("UserCtrl", ["$scope", "Socket", "Global", "API", 'ModalService', function($scope, Socket, Global, API, ModalService){
     
     var sckt = Socket;
     var api = API;
     
     $scope.glbl = Global;
     $scope.error = {};
+    $scope.addingInters = false;
     
     sckt.on('ping', function(){
         console.log('ping');
@@ -106,6 +107,115 @@ appControllers.controller("UserCtrl", ["$scope", "Socket", "Global", "API", func
             console.log(data);
         });
     };
+    
+    $scope.ShowAddInterviewers = function() {
+        if ($scope.addingInters === false) {
+            ModalService.showModal({
+                controller: 'AddIntersController',
+                templateUrl: 'src/templates/create-interviewers-modal.html'
+            })
+            .then(function(modal){
+                $scope.addingInters = true;
+                modal.close.then(function(result){
+                    $scope.addingInters = false;
+                });
+            });
+        }        
+    };
+    
+}]);
+
+appControllers.controller("AddIntersController", ['$scope', 'Socket', 'API', '$q', 'close', function($scope, Socket, API, $q, close){
+    
+    var api = API;
+    
+    $scope.closeModal = function(data) {
+        close(data, 0);
+    };
+    
+    $scope.refresh = function() {
+        $scope.interviewersData = undefined;
+        $scope.dropped = false;
+    };
+    
+    $scope.ArrayOfIntersToCreate = [];
+    $scope.creating = false;
+    
+    $scope.createInterviewers = function(list) {
+        
+        $scope.creating = true;
+        
+        var reqArray = list.map(function(inter){
+            if (inter.Username && inter.Password) {
+                return api.CreateInterviewer(inter);
+            }
+        });
+
+        $q.all(reqArray).then(function(responses) {
+            console.log(responses);
+            
+            responses.forEach(function(response, i){
+                if (response && response.status === 200) {
+                    list[i]._status = 'created';
+                } else if (response && response.status === 204) {
+                    list[i]._errorMessage = 'User already exists';
+                    list[i]._status = 'exists';
+                }
+            });
+            
+            $scope.creating = false;
+            
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.$watch('interviewersData', function(newVal, oldVal){
+        
+        var Sheet,
+            Keys  = {
+                'Username' : '',
+                'FirstName' : '',
+                'LastName' : '',
+                'EmailAddress' : '',
+                'TelephoneNumber' : '',
+                'Password' : '',
+                'ClientInterviewerId' : ''
+            };
+            
+        $scope.ArrayOfIntersToCreate = [];
+        
+        if (newVal && newVal.Sheets) {
+            
+            Sheet = newVal.Sheets[newVal.SheetNames[0]];
+            Sheet['!rowsLength'] = parseInt(Sheet['!ref'].split(':')[1].replace(/\D/g, ''), 10);
+            
+            for (var key in Sheet) {
+                switch (Sheet[key].v) {
+                    case 'Username':
+                    case 'FirstName':
+                    case 'LastName':
+                    case 'EmailAddress':
+                    case 'TelephoneNumber':
+                    case 'Password':
+                    case 'ClientInterviewerId':
+                        Keys[Sheet[key].v] = key.replace(/[0-9]/g, '');
+                }
+            }
+            
+            for (var i = 2; i <= Sheet['!rowsLength']; i++) {
+                var tempInter = {
+                    _status : 'pending'
+                };
+                for (var param in Keys) {
+                    tempInter[param] = Sheet[Keys[param] + i] ? String(Sheet[Keys[param] + i].v).trim() : '';
+                }
+                $scope.ArrayOfIntersToCreate.push(tempInter);
+            }
+            
+        }
+
+    });
     
 }]);
 
