@@ -1,99 +1,80 @@
-.download-options.ng-animate{
-display:block !important;
+.download-options.ng-animate {
+    display: block !important;
 }
-.download-options.ng-hide-remove{
-/*animation*/
--webkit-animation:200ms slide-in-150;
-   -moz-animation:200ms slide-in-150;
-    -ms-animation:200ms slide-in-150;
-     -o-animation:200ms slide-in-150;
-        animation:200ms slide-in-150;
+
+.download-options.ng-hide-remove {
+    -webkit-animation: 200ms slide-in-150;
+    animation: 200ms slide-in-150;
 }
-.download-options.ng-hide-add{
-/*animation*/
--webkit-animation:200ms slide-in-150;
-   -moz-animation:200ms slide-in-150;
-    -ms-animation:200ms slide-in-150;
-     -o-animation:200ms slide-in-150;
-        animation:200ms slide-in-150;
-/*animation-direction*/
--webkit-animation-direction:alternate-reverse;
-   -moz-animation-direction:alternate-reverse;
-    -ms-animation-direction:alternate-reverse;
-     -o-animation-direction:alternate-reverse;
-        animation-direction:alternate-reverse;
+
+.download-options.ng-hide-add {
+    -webkit-animation: 200ms slide-in-150;
+    animation: 200ms slide-in-150;
+    -webkit-animation-direction: alternate-reverse;
+    animation-direction: alternate-reverse;
 }
-.option-select.ng-animate{
-display:flex !important;
+
+
+.option-select.ng-animate {
+    display: -webkit-flex !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
 }
-.option-select.ng-hide-remove{
-/*animation*/
--webkit-animation:300ms slide-in-150;
-   -moz-animation:300ms slide-in-150;
-    -ms-animation:300ms slide-in-150;
-     -o-animation:300ms slide-in-150;
-        animation:300ms slide-in-150;
+
+.option-select.ng-hide-remove {
+    -webkit-animation: 300ms slide-in-150;
+    animation: 300ms slide-in-150;
 }
-.option-select.ng-hide-add{
-/*animation*/
--webkit-animation:200ms slide-in-150;
-   -moz-animation:200ms slide-in-150;
-    -ms-animation:200ms slide-in-150;
-     -o-animation:200ms slide-in-150;
-        animation:200ms slide-in-150;
-/*animation-direction*/
--webkit-animation-direction:alternate-reverse;
-   -moz-animation-direction:alternate-reverse;
-    -ms-animation-direction:alternate-reverse;
-     -o-animation-direction:alternate-reverse;
-        animation-direction:alternate-reverse;
+
+.option-select.ng-hide-add {
+    -webkit-animation: 200ms slide-in-150;
+    animation: 200ms slide-in-150;
+    -webkit-animation-direction: alternate-reverse;
+    animation-direction: alternate-reverse;
 }
-.menu-fader.ng-animate{
-display:block !important;
+
+.menu-fader.ng-animate {
+    display: block !important;
 }
-.menu-fader.ng-hide-remove{
-/*animation*/
--webkit-animation:300ms transparent;
-   -moz-animation:300ms transparent;
-    -ms-animation:300ms transparent;
-     -o-animation:300ms transparent;
-        animation:300ms transparent;
-/*animation-direction*/
--webkit-animation-direction:alternate-reverse;
-   -moz-animation-direction:alternate-reverse;
-    -ms-animation-direction:alternate-reverse;
-     -o-animation-direction:alternate-reverse;
-        animation-direction:alternate-reverse;
+
+.menu-fader.ng-hide-remove {
+    -webkit-animation: 300ms transparent;
+    animation: 300ms transparent;
+    -webkit-animation-direction: alternate-reverse;
+    animation-direction: alternate-reverse;
 }
-.menu-fader.ng-hide-add{
-/*animation*/
--webkit-animation:300ms transparent;
-   -moz-animation:300ms transparent;
-    -ms-animation:300ms transparent;
-     -o-animation:300ms transparent;
-        animation:300ms transparent;
+
+.menu-fader.ng-hide-add {
+    -webkit-animation: 300ms transparent;
+    animation: 300ms transparent;
 }
-@keyframes transparent{
-from { opacity: 1; }
-    to { opacity: 0; }
+
+@keyframes transparent {
+    from { opacity: 1; filter: alpha(opacity=100); }
+    to { opacity: 0; filter: alpha(opacity=0); }
 }
-@-webkit-keyframes transparent{
-from { opacity: 1; }
-    to { opacity: 0; }
+
+@-webkit-keyframes transparent {
+    from { opacity: 1; filter: alpha(opacity=100); }
+    to { opacity: 0; filter: alpha(opacity=0); }
 }
-@keyframes slide-in-150{
-from { margin-left: -150px; }
+
+@keyframes slide-in-150 {
+    from { margin-left: -150px; }
     to { margin-left: 0; }
 }
-@-webkit-keyframes slide-in-150{
-from { margin-left: -150px; }
+
+@-webkit-keyframes slide-in-150 {
+    from { margin-left: -150px; }
     to { margin-left: 0; }
 }
-@keyframes slide-in-300{
-from { margin-left: -300px; }
+
+@keyframes slide-in-300 {
+    from { margin-left: -300px; }
     to { margin-left: 0; }
 }
-@-webkit-keyframes slide-in-300{
-from { margin-left: -300px; }
+
+@-webkit-keyframes slide-in-300 {
+    from { margin-left: -300px; }
     to { margin-left: 0; }
 }
