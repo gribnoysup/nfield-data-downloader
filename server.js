@@ -708,6 +708,20 @@ var NFIELD = {
             if (typeof (cb) == 'function') cb(error, response, body);
         });
     },
+    CreateInterviewer : function(interviewer, cb) {
+        request({
+            url: nfieldapi + 'v1/Interviewers',
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + APIuser.token
+            },
+            json: interviewer
+        }, function (error, response, body) {
+            if (typeof (cb) == 'function') cb(error, response, body);
+        });
+    }
 };
 
 var GenerateInterviewersList = function(cb){
@@ -1242,6 +1256,20 @@ app.post('/api/v1/survey/assign/:surveyId/:interviewerId', function(req, res, ne
     if (req.headers.authorization.split(' ')[1] == req.session.token){
         NFIELD.AssignInterviewerToSurvey(req.params.surveyId, req.params.interviewerId, function(err, responce, body){
             res.send({ statusCode: responce.statusCode });
+        });
+    } else {
+        res.send({ statusCode: 401, message: 'Access denied'});
+    }
+});
+
+app.post('/api/v1/interviewer/create', function(req, res, next){
+    if (req.headers.authorization.split(' ')[1] == req.session.token){
+        NFIELD.CreateInterviewer(req.body, function(err, responce, body){
+            if (body && !body.NfieldErrorCode) {
+                res.status(200).send(body);
+            } else {
+                res.status(204).send('User already exists');
+            }
         });
     } else {
         res.send({ statusCode: 401, message: 'Access denied'});
