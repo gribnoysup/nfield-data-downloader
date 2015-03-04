@@ -67,7 +67,11 @@ Contains server workflow settings:
   "startAutodownloadsOnRun" : true,
   "checkDownloadsOnRun" : true,
   "generateInterviewersList" : true,
-  "localDownloadFolder" : "folderToDownloadDataTo"
+  "localDownloadFolder" : "folderToDownloadDataTo",
+  "request" : {
+	    "use" : false,
+	    "proxy" : "http://your.proxy.server:1234"
+	}
 }
 ```
  - **createLocalDownloadLog** create a log file, that will contain information about downloaded files
@@ -75,6 +79,7 @@ Contains server workflow settings:
  - **checkDownloadsOnRun** check all unfinished download requests if the server is restarted (else unfinished requests are deleted)
  - **generateInterviewersList** automatically generate a list of all interviewers, that are created on your domain in .dat and .sps formats
  - **localDownloadFolder** a folder to use, when a local download is requested
+ - **request** contains a request module settings, that are appliet to the request module if request.use is set to true
 
 
 Done!
