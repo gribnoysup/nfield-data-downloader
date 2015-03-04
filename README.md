@@ -81,7 +81,6 @@ Contains server workflow settings:
  - **localDownloadFolder** a folder to use, when a local download is requested
  - **request** contains a request module settings, that are appliet to the request module if request.use is set to true
 
-
 Done!
 --
 Be aware that by default this node.js app uses port 80 to run, you'll need to have the root rights to run it on this port (or just change it in the very beginning of ```server.js``` file)
