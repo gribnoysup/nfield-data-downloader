@@ -1,5 +1,4 @@
-var request = require('request'),
-    express = require('express'),
+var express = require('express'),
     app = express(),
     nedb = require('nedb'),
     fs = require('fs'),
@@ -12,6 +11,8 @@ var port = process.env.PORT || 80,
     apiSettings = {}, //read from /{appfolder}/secret/settings.json file
     APIuser = {}, //read from /{appfolder}/secret/apiuser.json file
     AutodownloadIntervals = {};
+
+var request;
 
 function translit(str) {
     var result = '';
@@ -97,6 +98,12 @@ process.env.PWD = process.cwd();
 
 APIuser = JSON.parse(fs.readFileSync(path.join('settings', 'apiuser.json'), 'utf8'));
 apiSettings = JSON.parse(fs.readFileSync(path.join('settings', 'settings.json'), 'utf8'));
+
+if (apiSettings.request && apiSettings.request.use) {
+    request = require('request').defaults(apiSettings.request);
+} else {
+    request = require('request');
+}
 
 fs.mkdir(path.join(process.env.PWD, apiSettings.localDownloadFolder));
 
