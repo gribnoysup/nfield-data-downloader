@@ -626,8 +626,7 @@ var NFIELD = {
                 'SurveyId': options.SurveyId,
                 'DownloadTestInterviewData': options.DownloadTestInterviewData,
                 'DownloadSuccessfulLiveInterviewData': options.DownloadSuccessfulLiveInterviewData,
-                // TODO:
-                'DownloadRejectedLiveInterviewData': true,
+                'DownloadRejectedLiveInterviewData': options.DownloadRejectedLiveInterviewData,
                 'DownloadNotSuccessfulLiveInterviewData': options.DownloadNotSuccessfulLiveInterviewData,
                 'DownloadSuspendedLiveInterviewData': options.DownloadSuspendedLiveInterviewData,
                 'DownloadParaData': options.DownloadParaData,
