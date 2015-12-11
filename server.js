@@ -106,7 +106,7 @@ if (apiSettings.request && apiSettings.request.use) {
 }
 
 function recursiveMkdir (fullPath, root) {
-  var fullPathArr = path.split('/');
+  var fullPathArr = fullPath.split('/');
   var dir = fullPathArr.shift();
   
   try {
