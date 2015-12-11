@@ -265,7 +265,7 @@ var CheckDownload = function(ReqId, cb) {
           
           
           if (tempDoc.Local === true && tempDoc.ReqBody.ResultUrl && tempDoc.ClientReqStatus == 0) {
-            downloadLocally(apiSettings.localDownloadFolder, tempDoc.ReqBody.ResultUrl, (fileName.DownloadFileName + '.zip'), function () {
+            downloadLocally(apiSettings.localDownloadFolder, tempDoc.ReqBody.ResultUrl, (fileName.DownloadFileName + parseInt(Math.random() * 10000, 10).toString() + '.zip'), function () {
               Downloads.update({ '_id' : tempDoc._id }, { $set : { ClientReqStatus : 1 } }, {}, function(err) {
                   if (err) {
                     console.trace(err);
