@@ -7,7 +7,7 @@
     "express": "3.4.x",
     "nedb": "0.9.x",
     "crypto": "0.0.3",
-    "request": "2.33.x",
+    "request": "2.x.x",
     "socket.io": "~0.9.16"
   },
   "engines": {
