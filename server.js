@@ -117,7 +117,7 @@ function recursiveMkdir (fullPath, root) {
     }
   }
   
-  return !fullPathArr.length || recursiveMkdir(fullPathArr.join('/'), root);
+  return !fullPathArr.length || recursiveMkdir(fullPathArr.join('/'), root + '/' + dir);
   
 }
 
