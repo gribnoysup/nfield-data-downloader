@@ -262,8 +262,18 @@ var CheckDownload = function(ReqId, cb) {
           var tempDoc = doc,
             fileName = JSON.parse(doc.ReqBody.Parameters);
           
-          if (tempDoc.Local === true && tempDoc.ReqBody.ResultUrl) {
-            downloadLocally(apiSettings.localDownloadFolder, tempDoc.ReqBody.ResultUrl, (fileName.DownloadFileName + '.zip'));
+          if (tempDoc.Local === true && tempDoc.ReqBody.ResultUrl && tempDoc.ClientReqStatus == 0) {
+            downloadLocally(apiSettings.localDownloadFolder, tempDoc.ReqBody.ResultUrl, (fileName.DownloadFileName + '.zip'), function () {
+              Downloads.update({ '_id' : tempDoc._id }, { $set : { ClientReqStatus : 1 } }, {}, function(err) {
+                  if (err) {
+                    console.trace(err);
+                  } else {
+                    console.log('file ' + fileName.DownloadFileName + '.zip downloaded');
+                  }
+              });
+            });
+          } else {
+            console.log('checked file ' + fileName.DownloadFileName + '.zip, it is already downloaded');
           }
           
           Users.findOne({ name : doc.User.toLowerCase() }, function(err, doc){
