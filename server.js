@@ -112,7 +112,7 @@ function recursiveMkdir (fullPath, root) {
   try {
     fs.mkdirSync(path.join(root, dir));
   } catch (err) {
-    if (err.code !== 'EEXIST') {
+    if (err && err.code !== 'EEXIST') {
       throw new Error(err);
     }
   }
