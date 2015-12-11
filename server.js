@@ -123,7 +123,7 @@ function recursiveMkdir (fullPath, root) {
 
 if (typeof apiSettings.localDownloadFolder !== 'undefined' && apiSettings.localDownloadFolder !== '') {
   fs.stat(path.join(process.env.PWD, apiSettings.localDownloadFolder), function (err, stats) {
-    if (err.code == 'ENOENT') {
+    if (err && err.code == 'ENOENT') {
       recursiveMkdir(apiSettings.localDownloadFolder, process.env.PWD);
     }
   });
