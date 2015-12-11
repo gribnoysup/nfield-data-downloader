@@ -105,10 +105,26 @@ if (apiSettings.request && apiSettings.request.use) {
   request = require('request');
 }
 
+function recursiveMkdir (fullPath, root) {
+  var fullPathArr = path.split('/');
+  var dir = fullPathArr.shift();
+  
+  try {
+    fs.mkdirSync(path.join(root, dir));
+  } catch (err) {
+    if (err.code !== 'EEXIST') {
+      throw new Error(err);
+    }
+  }
+  
+  return !fullPathArr.length || recursiveMkdir(fullPathArr.join('/'), root);
+  
+}
+
 if (typeof apiSettings.localDownloadFolder !== 'undefined' && apiSettings.localDownloadFolder !== '') {
   fs.stat(path.join(process.env.PWD, apiSettings.localDownloadFolder), function (err, stats) {
     if (err.code == 'ENOENT') {
-      fs.mkdirSync(path.join(process.env.PWD, apiSettings.localDownloadFolder));
+      recursiveMkdir(apiSettings.localDownloadFolder, process.env.PWD);
     }
   });
 }
