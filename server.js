@@ -261,6 +261,8 @@ var CheckDownload = function(ReqId, cb) {
         Downloads.findOne({ 'ReqBody.Id' : body.Id }, function(err, doc){
           var tempDoc = doc,
             fileName = JSON.parse(doc.ReqBody.Parameters);
+            
+          
           
           if (tempDoc.Local === true && tempDoc.ReqBody.ResultUrl && tempDoc.ClientReqStatus == 0) {
             downloadLocally(apiSettings.localDownloadFolder, tempDoc.ReqBody.ResultUrl, (fileName.DownloadFileName + '.zip'), function () {
@@ -272,8 +274,6 @@ var CheckDownload = function(ReqId, cb) {
                   }
               });
             });
-          } else {
-            console.log('checked file ' + fileName.DownloadFileName + '.zip, it is already downloaded');
           }
           
           Users.findOne({ name : doc.User.toLowerCase() }, function(err, doc){
