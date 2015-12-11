@@ -225,27 +225,27 @@ var downloadLocally = function(dest, url, filename, cb){
       fs.rename(
         path.join(process.env.PWD, dest, tempFilename),
         path.join(process.env.PWD, dest, filename),
-        function(){
-          
-          if (apiSettings.createLocalDownloadLog) {
-          
-            var stat = fs.statSync(path.join(process.env.PWD, dest, filename)),
-              size = {},
-              logFile = fs.createWriteStream(path.join(process.env.PWD, dest, 'filedownload.log'), {'flags': 'a'}),
-              now = new Date(stat.mtime),
-              date = now.getFullYear() + '.' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '.' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate()),
-              time = (now.getHours() < 10 ? '0' + now.getHours() : now.getHours()) + ':' + (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes()) + ':' + (now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds());
+          function(){
+            
+            if (apiSettings.createLocalDownloadLog) {
+            
+              var stat = fs.statSync(path.join(process.env.PWD, dest, filename)),
+                size = {},
+                logFile = fs.createWriteStream(path.join(process.env.PWD, dest, 'filedownload.log'), {'flags': 'a'}),
+                now = new Date(stat.mtime),
+                date = now.getFullYear() + '.' + ((now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1)) + '.' + (now.getDate() < 10 ? '0' + now.getDate() : now.getDate()),
+                time = (now.getHours() < 10 ? '0' + now.getHours() : now.getHours()) + ':' + (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes()) + ':' + (now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds());
+                
+              size = BytesToStuff(stat.size, true);
               
-            size = BytesToStuff(stat.size, true);
+              
+              logFile.write(filename + '\t' + date + '\t' + time + '\t' + size.val + '\r\n');
+              logFile.end();
             
+            }
             
-            logFile.write(filename + '\t' + date + '\t' + time + '\t' + size.val + '\r\n');
-            logFile.end();
-          
+            if (typeof (cb) == 'function') cb(filename);
           }
-          
-          if (typeof (cb) == 'function') cb();
-        }
       );
     });
     
@@ -259,19 +259,13 @@ var CheckDownload = function(ReqId, cb) {
       body = JSON.parse(body);
       Downloads.update({ 'ReqBody.Id' : body.Id }, { $set: { ReqBody: body } }, {}, function(err, doc){
         Downloads.findOne({ 'ReqBody.Id' : body.Id }, function(err, doc){
-          var tempDoc = doc,
-            fileName = JSON.parse(doc.ReqBody.Parameters);
-            
-          
+          var tempDoc = doc;
+          var fileName = JSON.parse(doc.ReqBody.Parameters);
           
           if (tempDoc.Local === true && tempDoc.ReqBody.ResultUrl && tempDoc.ClientReqStatus == 0) {
-            downloadLocally(apiSettings.localDownloadFolder, tempDoc.ReqBody.ResultUrl, (fileName.DownloadFileName + parseInt(Math.random() * 10000, 10).toString() + '.zip'), function () {
-              Downloads.update({ '_id' : tempDoc._id }, { $set : { ClientReqStatus : 1 } }, {}, function(err) {
-                  if (err) {
-                    console.trace(err);
-                  } else {
-                    console.log('file ' + fileName.DownloadFileName + '.zip downloaded');
-                  }
+            Downloads.update({ '_id' : tempDoc._id }, { $set : { ClientReqStatus : 1 } }, {}, function () {
+              downloadLocally(apiSettings.localDownloadFolder, tempDoc.ReqBody.ResultUrl, (fileName.DownloadFileName + parseInt(Math.random() * 10000, 10).toString() + '.zip'), function (filename) {
+                console.log('file ' + filename + ' downloaded successfully');
               });
             });
           }
@@ -293,6 +287,7 @@ var CheckDownload = function(ReqId, cb) {
               }
             }
           });
+          
         });
       });
     } else if (response && response.statusCode == 404) {
